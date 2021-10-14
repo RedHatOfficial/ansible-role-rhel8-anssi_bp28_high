@@ -1,5 +1,6 @@
 ---
 # defaults file for rhel8_anssi_bp28_high
+var_aide_scan_notification_email: root@localhost
 var_sudo_passwd_timeout: '1'
 var_sudo_umask: '0027'
 var_password_pam_unix_remember: '2'
@@ -79,6 +80,7 @@ accounts_umask_etc_login_defs: true
 accounts_umask_etc_profile: true
 aide_build_database: true
 aide_periodic_cron_checking: true
+aide_scan_notification: true
 audit_rules_privileged_commands_sudo: true
 chronyd_specify_remote_server: true
 configure_strategy: true
