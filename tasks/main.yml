@@ -3353,7 +3353,6 @@
     manager: auto
   tags:
   - CCE-83403-6
-  - DISA-STIG-RHEL-08-010130
   - accounts_password_pam_unix_rounds_password_auth
   - configure_strategy
   - low_complexity
@@ -3387,7 +3386,6 @@
   - '"pam" in ansible_facts.packages'
   tags:
   - CCE-83403-6
-  - DISA-STIG-RHEL-08-010130
   - accounts_password_pam_unix_rounds_password_auth
   - configure_strategy
   - low_complexity
@@ -3409,7 +3407,6 @@
   - '"pam" in ansible_facts.packages'
   tags:
   - CCE-83403-6
-  - DISA-STIG-RHEL-08-010130
   - accounts_password_pam_unix_rounds_password_auth
   - configure_strategy
   - low_complexity
@@ -3537,7 +3534,6 @@
   - result_authselect_present.stat.exists
   tags:
   - CCE-83403-6
-  - DISA-STIG-RHEL-08-010130
   - accounts_password_pam_unix_rounds_password_auth
   - configure_strategy
   - low_complexity
@@ -3570,7 +3566,6 @@
   - not result_authselect_present.stat.exists
   tags:
   - CCE-83403-6
-  - DISA-STIG-RHEL-08-010130
   - accounts_password_pam_unix_rounds_password_auth
   - configure_strategy
   - low_complexity
@@ -3583,7 +3578,6 @@
     manager: auto
   tags:
   - CCE-83386-3
-  - DISA-STIG-RHEL-08-010131
   - accounts_password_pam_unix_rounds_system_auth
   - configure_strategy
   - low_complexity
@@ -3617,7 +3611,6 @@
   - '"pam" in ansible_facts.packages'
   tags:
   - CCE-83386-3
-  - DISA-STIG-RHEL-08-010131
   - accounts_password_pam_unix_rounds_system_auth
   - configure_strategy
   - low_complexity
@@ -3639,7 +3632,6 @@
   - '"pam" in ansible_facts.packages'
   tags:
   - CCE-83386-3
-  - DISA-STIG-RHEL-08-010131
   - accounts_password_pam_unix_rounds_system_auth
   - configure_strategy
   - low_complexity
@@ -3767,7 +3759,6 @@
   - result_authselect_present.stat.exists
   tags:
   - CCE-83386-3
-  - DISA-STIG-RHEL-08-010131
   - accounts_password_pam_unix_rounds_system_auth
   - configure_strategy
   - low_complexity
@@ -3800,7 +3791,6 @@
   - not result_authselect_present.stat.exists
   tags:
   - CCE-83386-3
-  - DISA-STIG-RHEL-08-010131
   - accounts_password_pam_unix_rounds_system_auth
   - configure_strategy
   - low_complexity
@@ -4101,7 +4091,7 @@
 - name: Replace user umask in /etc/profile
   replace:
     path: /etc/profile
-    regexp: umask.*
+    regexp: ^[^#]*umask
     replace: umask {{ var_accounts_user_umask }}
   register: umask_replace
   tags:
@@ -4512,9 +4502,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_ra_defrtr.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -4535,7 +4528,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_ra_defrtr from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_ra_defrtr
     replace: '#net.ipv6.conf.all.accept_ra_defrtr'
   loop: '{{ find_sysctl_d.files }}'
@@ -4581,9 +4574,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_ra_pinfo.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -4604,7 +4600,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_ra_pinfo from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_ra_pinfo
     replace: '#net.ipv6.conf.all.accept_ra_pinfo'
   loop: '{{ find_sysctl_d.files }}'
@@ -4650,9 +4646,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_ra_rtr_pref.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -4673,7 +4672,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_ra_rtr_pref from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_ra_rtr_pref
     replace: '#net.ipv6.conf.all.accept_ra_rtr_pref'
   loop: '{{ find_sysctl_d.files }}'
@@ -4719,9 +4718,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -4749,7 +4751,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_redirects
     replace: '#net.ipv6.conf.all.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -4809,9 +4811,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -4837,7 +4842,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.accept_source_route
     replace: '#net.ipv6.conf.all.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -4893,9 +4898,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.autoconf.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -4916,7 +4924,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.autoconf from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.autoconf
     replace: '#net.ipv6.conf.all.autoconf'
   loop: '{{ find_sysctl_d.files }}'
@@ -4962,9 +4970,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.max_addresses.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -4985,7 +4996,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.max_addresses from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.max_addresses
     replace: '#net.ipv6.conf.all.max_addresses'
   loop: '{{ find_sysctl_d.files }}'
@@ -5031,9 +5042,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.all.router_solicitations.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5054,7 +5068,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.all.router_solicitations from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.all.router_solicitations
     replace: '#net.ipv6.conf.all.router_solicitations'
   loop: '{{ find_sysctl_d.files }}'
@@ -5100,9 +5114,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_ra_defrtr.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5123,7 +5140,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_ra_defrtr from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_ra_defrtr
     replace: '#net.ipv6.conf.default.accept_ra_defrtr'
   loop: '{{ find_sysctl_d.files }}'
@@ -5169,9 +5186,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_ra_pinfo.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5192,7 +5212,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_ra_pinfo from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_ra_pinfo
     replace: '#net.ipv6.conf.default.accept_ra_pinfo'
   loop: '{{ find_sysctl_d.files }}'
@@ -5238,9 +5258,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_ra_rtr_pref.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5261,7 +5284,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_ra_rtr_pref from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_ra_rtr_pref
     replace: '#net.ipv6.conf.default.accept_ra_rtr_pref'
   loop: '{{ find_sysctl_d.files }}'
@@ -5307,9 +5330,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5335,7 +5361,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_redirects
     replace: '#net.ipv6.conf.default.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -5391,9 +5417,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5421,7 +5450,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.accept_source_route
     replace: '#net.ipv6.conf.default.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -5481,9 +5510,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.autoconf.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5504,7 +5536,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.autoconf from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.autoconf
     replace: '#net.ipv6.conf.default.autoconf'
   loop: '{{ find_sysctl_d.files }}'
@@ -5550,9 +5582,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.max_addresses.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5573,7 +5608,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.max_addresses from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.max_addresses
     replace: '#net.ipv6.conf.default.max_addresses'
   loop: '{{ find_sysctl_d.files }}'
@@ -5619,9 +5654,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv6.conf.default.router_solicitations.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5642,7 +5680,7 @@
 
 - name: Comment out any occurrences of net.ipv6.conf.default.router_solicitations from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv6.conf.default.router_solicitations
     replace: '#net.ipv6.conf.default.router_solicitations'
   loop: '{{ find_sysctl_d.files }}'
@@ -5688,9 +5726,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5718,7 +5759,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.accept_redirects
     replace: '#net.ipv4.conf.all.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -5778,9 +5819,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5808,7 +5852,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.accept_source_route
     replace: '#net.ipv4.conf.all.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -5868,9 +5912,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.log_martians.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5895,7 +5942,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.log_martians from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.log_martians
     replace: '#net.ipv4.conf.all.log_martians'
   loop: '{{ find_sysctl_d.files }}'
@@ -5949,9 +5996,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.rp_filter.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -5978,7 +6028,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.rp_filter from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.rp_filter
     replace: '#net.ipv4.conf.all.rp_filter'
   loop: '{{ find_sysctl_d.files }}'
@@ -6036,9 +6086,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.secure_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6064,7 +6117,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.secure_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.secure_redirects
     replace: '#net.ipv4.conf.all.secure_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -6120,9 +6173,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.accept_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6150,7 +6206,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.accept_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.accept_redirects
     replace: '#net.ipv4.conf.default.accept_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -6210,9 +6266,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.accept_source_route.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6240,7 +6299,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.accept_source_route from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.accept_source_route
     replace: '#net.ipv4.conf.default.accept_source_route'
   loop: '{{ find_sysctl_d.files }}'
@@ -6300,9 +6359,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.rp_filter.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6328,7 +6390,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.rp_filter from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.rp_filter
     replace: '#net.ipv4.conf.default.rp_filter'
   loop: '{{ find_sysctl_d.files }}'
@@ -6384,9 +6446,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.secure_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6412,7 +6477,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.secure_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.secure_redirects
     replace: '#net.ipv4.conf.default.secure_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -6468,9 +6533,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.icmp_ignore_bogus_error_responses.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6495,7 +6563,7 @@
 
 - name: Comment out any occurrences of net.ipv4.icmp_ignore_bogus_error_responses from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.icmp_ignore_bogus_error_responses
     replace: '#net.ipv4.icmp_ignore_bogus_error_responses'
   loop: '{{ find_sysctl_d.files }}'
@@ -6549,9 +6617,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.ip_local_port_range.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6572,7 +6643,7 @@
 
 - name: Comment out any occurrences of net.ipv4.ip_local_port_range from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.ip_local_port_range
     replace: '#net.ipv4.ip_local_port_range'
   loop: '{{ find_sysctl_d.files }}'
@@ -6618,9 +6689,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.tcp_rfc1337.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6641,7 +6715,7 @@
 
 - name: Comment out any occurrences of net.ipv4.tcp_rfc1337 from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.tcp_rfc1337
     replace: '#net.ipv4.tcp_rfc1337'
   loop: '{{ find_sysctl_d.files }}'
@@ -6687,9 +6761,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.tcp_syncookies.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6718,7 +6795,7 @@
 
 - name: Comment out any occurrences of net.ipv4.tcp_syncookies from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.tcp_syncookies
     replace: '#net.ipv4.tcp_syncookies'
   loop: '{{ find_sysctl_d.files }}'
@@ -6780,9 +6857,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.all.send_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6811,7 +6891,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.all.send_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.all.send_redirects
     replace: '#net.ipv4.conf.all.send_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -6873,9 +6953,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.conf.default.send_redirects.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6904,7 +6987,7 @@
 
 - name: Comment out any occurrences of net.ipv4.conf.default.send_redirects from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.conf.default.send_redirects
     replace: '#net.ipv4.conf.default.send_redirects'
   loop: '{{ find_sysctl_d.files }}'
@@ -6966,9 +7049,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*net.ipv4.ip_forward.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -6996,7 +7082,7 @@
 
 - name: Comment out any occurrences of net.ipv4.ip_forward from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*net.ipv4.ip_forward
     replace: '#net.ipv4.ip_forward'
   loop: '{{ find_sysctl_d.files }}'
@@ -7257,9 +7343,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*fs.protected_hardlinks.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -7283,7 +7372,7 @@
 
 - name: Comment out any occurrences of fs.protected_hardlinks from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*fs.protected_hardlinks
     replace: '#fs.protected_hardlinks'
   loop: '{{ find_sysctl_d.files }}'
@@ -7335,9 +7424,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*fs.protected_symlinks.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -7361,7 +7453,7 @@
 
 - name: Comment out any occurrences of fs.protected_symlinks from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*fs.protected_symlinks
     replace: '#fs.protected_symlinks'
   loop: '{{ find_sysctl_d.files }}'
@@ -9700,9 +9792,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.dmesg_restrict.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -9727,7 +9822,7 @@
 
 - name: Comment out any occurrences of kernel.dmesg_restrict from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.dmesg_restrict
     replace: '#kernel.dmesg_restrict'
   loop: '{{ find_sysctl_d.files }}'
@@ -9781,9 +9876,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.modules_disabled.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -9804,7 +9902,7 @@
 
 - name: Comment out any occurrences of kernel.modules_disabled from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.modules_disabled
     replace: '#kernel.modules_disabled'
   loop: '{{ find_sysctl_d.files }}'
@@ -9850,9 +9948,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.perf_cpu_time_max_percent.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -9873,7 +9974,7 @@
 
 - name: Comment out any occurrences of kernel.perf_cpu_time_max_percent from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.perf_cpu_time_max_percent
     replace: '#kernel.perf_cpu_time_max_percent'
   loop: '{{ find_sysctl_d.files }}'
@@ -9919,9 +10020,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.perf_event_max_sample_rate.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -9942,7 +10046,7 @@
 
 - name: Comment out any occurrences of kernel.perf_event_max_sample_rate from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.perf_event_max_sample_rate
     replace: '#kernel.perf_event_max_sample_rate'
   loop: '{{ find_sysctl_d.files }}'
@@ -9988,9 +10092,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.perf_event_paranoid.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10013,7 +10120,7 @@
 
 - name: Comment out any occurrences of kernel.perf_event_paranoid from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.perf_event_paranoid
     replace: '#kernel.perf_event_paranoid'
   loop: '{{ find_sysctl_d.files }}'
@@ -10063,9 +10170,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.pid_max.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10086,7 +10196,7 @@
 
 - name: Comment out any occurrences of kernel.pid_max from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.pid_max
     replace: '#kernel.pid_max'
   loop: '{{ find_sysctl_d.files }}'
@@ -10132,9 +10242,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.sysrq.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10155,7 +10268,7 @@
 
 - name: Comment out any occurrences of kernel.sysrq from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.sysrq
     replace: '#kernel.sysrq'
   loop: '{{ find_sysctl_d.files }}'
@@ -10201,9 +10314,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.yama.ptrace_scope.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10226,7 +10342,7 @@
 
 - name: Comment out any occurrences of kernel.yama.ptrace_scope from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.yama.ptrace_scope
     replace: '#kernel.yama.ptrace_scope'
   loop: '{{ find_sysctl_d.files }}'
@@ -10276,9 +10392,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*vm.mmap_min_addr.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10299,7 +10418,7 @@
 
 - name: Comment out any occurrences of vm.mmap_min_addr from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*vm.mmap_min_addr
     replace: '#vm.mmap_min_addr'
   loop: '{{ find_sysctl_d.files }}'
@@ -10345,9 +10464,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*fs.suid_dumpable.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10370,7 +10492,7 @@
 
 - name: Comment out any occurrences of fs.suid_dumpable from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*fs.suid_dumpable
     replace: '#fs.suid_dumpable'
   loop: '{{ find_sysctl_d.files }}'
@@ -10418,11 +10540,36 @@
   - reboot_required
   - sysctl_fs_suid_dumpable
 
+- name: Update grub defaults and the bootloader menu
+  command: /sbin/grubby --update-kernel=ALL --remove-args="noexec"
+  when:
+  - low_complexity | bool
+  - low_disruption | bool
+  - medium_severity | bool
+  - reboot_required | bool
+  - restrict_strategy | bool
+  - sysctl_kernel_exec_shield | bool
+  - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+  - CCE-80914-5
+  - NIST-800-171-3.1.7
+  - NIST-800-53-CM-6(a)
+  - NIST-800-53-SC-39
+  - low_complexity
+  - low_disruption
+  - medium_severity
+  - reboot_required
+  - restrict_strategy
+  - sysctl_kernel_exec_shield
+
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.kptr_restrict.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10448,7 +10595,7 @@
 
 - name: Comment out any occurrences of kernel.kptr_restrict from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.kptr_restrict
     replace: '#kernel.kptr_restrict'
   loop: '{{ find_sysctl_d.files }}'
@@ -10504,9 +10651,12 @@
 
 - name: List /etc/sysctl.d/*.conf files
   find:
-    paths: /etc/sysctl.d/
+    paths:
+    - /etc/sysctl.d/
+    - /run/sysctl.d/
     contains: ^[\s]*kernel.randomize_va_space.*$
     patterns: '*.conf'
+    file_type: any
   register: find_sysctl_d
   when:
   - disable_strategy | bool
@@ -10532,7 +10682,7 @@
 
 - name: Comment out any occurrences of kernel.randomize_va_space from /etc/sysctl.d/*.conf files
   replace:
-    path: '{{ item }}'
+    path: '{{ item.path }}'
     regexp: ^[\s]*kernel.randomize_va_space
     replace: '#kernel.randomize_va_space'
   loop: '{{ find_sysctl_d.files }}'
