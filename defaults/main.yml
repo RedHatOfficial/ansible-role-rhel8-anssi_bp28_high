@@ -67,6 +67,7 @@ var_multiple_time_servers: 0.pool.ntp.org,1.pool.ntp.org,2.pool.ntp.org,3.pool.n
 var_sshd_set_keepalive: '0'
 sshd_idle_timeout_value: '600'
 DISA_STIG_RHEL_08_010010: true
+DISA_STIG_RHEL_08_010019: true
 DISA_STIG_RHEL_08_010159: true
 DISA_STIG_RHEL_08_010170: true
 DISA_STIG_RHEL_08_010190: true
@@ -95,13 +96,15 @@ DISA_STIG_RHEL_08_010590: true
 DISA_STIG_RHEL_08_010700: true
 DISA_STIG_RHEL_08_020011: true
 DISA_STIG_RHEL_08_020012: true
-DISA_STIG_RHEL_08_020016: true
-DISA_STIG_RHEL_08_020022: true
+DISA_STIG_RHEL_08_020013: true
+DISA_STIG_RHEL_08_020015: true
+DISA_STIG_RHEL_08_020023: true
 DISA_STIG_RHEL_08_020110: true
 DISA_STIG_RHEL_08_020120: true
 DISA_STIG_RHEL_08_020130: true
 DISA_STIG_RHEL_08_020200: true
 DISA_STIG_RHEL_08_020230: true
+DISA_STIG_RHEL_08_020231: true
 DISA_STIG_RHEL_08_020280: true
 DISA_STIG_RHEL_08_020351: true
 DISA_STIG_RHEL_08_020353: true
@@ -151,6 +154,8 @@ DISA_STIG_RHEL_08_040282: true
 DISA_STIG_RHEL_08_040283: true
 DISA_STIG_RHEL_08_040285: true
 DISA_STIG_RHEL_08_040286: true
+DISA_STIG_RHEL_08_040300: true
+DISA_STIG_RHEL_08_040310: true
 accounts_maximum_age_login_defs: true
 accounts_password_minlen_login_defs: true
 accounts_password_pam_dcredit: true
@@ -174,6 +179,8 @@ accounts_umask_etc_profile: true
 aide_build_database: true
 aide_periodic_cron_checking: true
 aide_scan_notification: true
+aide_verify_acls: true
+aide_verify_ext_attributes: true
 audit_rules_dac_modification_chmod: true
 audit_rules_dac_modification_chown: true
 audit_rules_dac_modification_fchmod: true
@@ -317,6 +324,7 @@ sebool_ssh_sysadm_login: true
 security_patches_up_to_date: true
 selinux_policytype: true
 selinux_state: true
+service_chronyd_or_ntpd_enabled: true
 set_password_hashing_algorithm_systemauth: true
 skip_ansible_lint: true
 sshd_disable_root_login: true
