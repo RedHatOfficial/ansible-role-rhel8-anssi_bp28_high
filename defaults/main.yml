@@ -17,6 +17,7 @@ var_accounts_password_minlen_login_defs: '18'
 var_password_pam_unix_rounds: '65536'
 var_accounts_tmout: '600'
 var_accounts_user_umask: '077'
+var_accounts_passwords_pam_faillock_dir: /var/log/faillock
 var_l1tf_options: full,force
 var_rng_core_default_quality: '500'
 var_spec_store_bypass_disable_options: seccomp
@@ -57,7 +58,6 @@ var_slub_debug_options: FZP
 var_selinux_policy_name: targeted
 var_selinux_state: enforcing
 var_polyinstantiation_enabled: 'true'
-var_secure_mode_insmod: 'true'
 var_selinuxuser_execheap: 'false'
 var_selinuxuser_execstack: 'false'
 var_ssh_sysadm_login: 'false'
@@ -97,6 +97,7 @@ DISA_STIG_RHEL_08_010700: true
 DISA_STIG_RHEL_08_020011: true
 DISA_STIG_RHEL_08_020012: true
 DISA_STIG_RHEL_08_020013: true
+DISA_STIG_RHEL_08_020014: true
 DISA_STIG_RHEL_08_020015: true
 DISA_STIG_RHEL_08_020023: true
 DISA_STIG_RHEL_08_020110: true
@@ -114,6 +115,8 @@ DISA_STIG_RHEL_08_030140: true
 DISA_STIG_RHEL_08_030150: true
 DISA_STIG_RHEL_08_030160: true
 DISA_STIG_RHEL_08_030170: true
+DISA_STIG_RHEL_08_030180: true
+DISA_STIG_RHEL_08_030181: true
 DISA_STIG_RHEL_08_030200: true
 DISA_STIG_RHEL_08_030302: true
 DISA_STIG_RHEL_08_030360: true
@@ -228,6 +231,7 @@ audit_rules_usergroup_modification_gshadow: true
 audit_rules_usergroup_modification_opasswd: true
 audit_rules_usergroup_modification_passwd: true
 audit_rules_usergroup_modification_shadow: true
+audit_sudo_log_events: true
 chronyd_specify_remote_server: true
 configure_strategy: true
 dir_perms_world_writable_root_owned: true
@@ -286,9 +290,11 @@ mount_option_var_tmp_nosuid: true
 no_direct_root_logins: true
 no_reboot_needed: true
 package_aide_installed: true
+package_audit_installed: true
 package_chrony_installed: true
 package_dhcp_removed: true
 package_dnf_automatic_installed: true
+package_logrotate_installed: true
 package_rsh_removed: true
 package_rsh_server_removed: true
 package_rsyslog_gnutls_installed: true
@@ -317,13 +323,13 @@ rsyslog_files_permissions: true
 rsyslog_remote_loghost: true
 rsyslog_remote_tls: true
 sebool_polyinstantiation_enabled: true
-sebool_secure_mode_insmod: true
 sebool_selinuxuser_execheap: true
 sebool_selinuxuser_execstack: true
 sebool_ssh_sysadm_login: true
 security_patches_up_to_date: true
 selinux_policytype: true
 selinux_state: true
+service_auditd_enabled: true
 service_chronyd_or_ntpd_enabled: true
 set_password_hashing_algorithm_systemauth: true
 skip_ansible_lint: true
